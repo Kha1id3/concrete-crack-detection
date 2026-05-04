@@ -39,3 +39,4 @@ The planned solution uses a **Convolutional Neural Network (CNN)** for binary im
 ## Team
 - Khalid Muzaffar
 - Tomasz Mondrzycki
+- Aslan 
