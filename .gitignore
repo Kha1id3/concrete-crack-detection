@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and local outputs
+*.log
+results/logs/*
+!results/logs/.gitkeep
+results/models/*
+!results/models/.gitkeep
+
+# Local datasets
+data/raw/concrete_crack_images/*
+data/raw/sdnet2018/*
+!data/raw/concrete_crack_images/.gitkeep
+!data/raw/sdnet2018/.gitkeep
+
+data/processed/concrete_crack_images/*
+data/processed/sdnet2018/*
+!data/processed/concrete_crack_images/.gitkeep
+!data/processed/sdnet2018/.gitkeep
