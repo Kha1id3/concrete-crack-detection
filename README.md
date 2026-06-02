@@ -17,6 +17,8 @@ The project will compare pretrained convolutional neural network models on two d
 
 ## Setup
 
+Use Python 3.11 or 3.12 for TensorFlow. Python 3.14 is too new for the TensorFlow package used in this project.
+
 ```bash
 pip install -r requirements.txt
 ```

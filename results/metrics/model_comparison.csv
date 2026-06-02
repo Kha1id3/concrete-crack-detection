@@ -1,0 +1,7 @@
+dataset,model,experiment_type,train_limit,val_limit,test_limit,accuracy,precision,recall,f1_score
+concrete_crack_images,MobileNetV2,tuned_transfer_learning_conservative_aug,2000,500,500,0.994,0.9921259842519684,0.9960474308300395,0.9940828402366864
+concrete_crack_images,MobileNetV2,tuned_transfer_learning_conservative_aug,5000,1000,1000,0.993,0.9877800407331976,0.9979423868312756,0.992835209825998
+concrete_crack_images,MobileNetV2,tuned_transfer_learning,2000,500,500,0.992,0.99601593625498,0.9881422924901184,0.992063492063492
+concrete_crack_images,ResNet50,baseline_transfer_learning,5000,1000,1000,0.931,0.986013986013986,0.8703703703703703,0.9245901639344264
+concrete_crack_images,EfficientNetB0,baseline_transfer_learning,5000,1000,1000,0.486,0.486,1.0,0.6541049798115747
+concrete_crack_images,MobileNetV2,tuned_transfer_learning,2000,500,500,0.73,1.0,0.466403162055336,0.6361185983827493

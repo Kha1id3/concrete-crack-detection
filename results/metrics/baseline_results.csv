@@ -1,0 +1,2 @@
+timestamp,dataset,model,experiment_type,train_limit,val_limit,test_limit,epochs,batch_size,keras_test_accuracy,accuracy,precision,recall,f1_score
+2026-06-02T15:07:03,concrete_crack_images,MobileNetV2,baseline_transfer_learning,2000,500,500,3,32,0.9919999837875366,0.992,0.9960159362549801,0.9881422924901185,0.9920634920634921
