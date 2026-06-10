@@ -61,6 +61,7 @@ TEST_LIMIT = 1000
 
 METRICS_DIR = PROJECT_ROOT / "results" / "metrics"
 RESULTS_CSV = METRICS_DIR / "experiment_results.csv"
+RESULTS_ROOT = PROJECT_ROOT / "results"
 
 
 def print_array_sizes(x_train, y_train, x_val, y_val, x_test, y_test) -> None:
@@ -152,7 +153,7 @@ def get_class_weights(y_train) -> dict[int, float] | None:
 
 def save_training_history(history, history_csv: Path) -> None:
     """Save the Keras training history to a CSV file."""
-    METRICS_DIR.mkdir(parents=True, exist_ok=True)
+    history_csv.parent.mkdir(parents=True, exist_ok=True)
 
     history_df = pd.DataFrame(history.history)
     history_df.insert(0, "epoch", range(1, len(history_df) + 1))
@@ -165,9 +166,10 @@ def save_experiment_results(
     keras_test_accuracy: float,
     metrics: dict[str, float],
     epochs: int,
+    results_csv: Path = RESULTS_CSV,
 ) -> None:
     """Append one row of experiment results to the baseline results CSV."""
-    METRICS_DIR.mkdir(parents=True, exist_ok=True)
+    results_csv.parent.mkdir(parents=True, exist_ok=True)
 
     result_row = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -188,10 +190,10 @@ def save_experiment_results(
     }
 
     results_df = pd.DataFrame([result_row])
-    file_exists = RESULTS_CSV.exists()
-    results_df.to_csv(RESULTS_CSV, mode="a", header=not file_exists, index=False)
+    file_exists = results_csv.exists()
+    results_df.to_csv(results_csv, mode="a", header=not file_exists, index=False)
 
-    print(f"Experiment results saved to: {RESULTS_CSV}")
+    print(f"Experiment results saved to: {results_csv}")
 
 
 def run_experiment(
@@ -202,6 +204,8 @@ def run_experiment(
     val_limit: int | None = VAL_LIMIT,
     test_limit: int | None = TEST_LIMIT,
     random_seed: int = RANDOM_SEED,
+    results_root: str | Path = RESULTS_ROOT,
+    history_filename: str | None = None,
 ) -> None:
     """Run one experiment with the selected settings."""
     global DATASET_NAME, MODEL_NAME, EXPERIMENT_TYPE
@@ -217,9 +221,17 @@ def run_experiment(
 
     set_random_seeds()
 
+    results_root = Path(results_root)
+    metrics_dir = results_root / "metrics"
+    (results_root / "figures").mkdir(parents=True, exist_ok=True)
+    (results_root / "logs").mkdir(parents=True, exist_ok=True)
+
     experiment_settings = get_experiment_settings()
     epochs = int(experiment_settings["epochs"])
-    history_csv = METRICS_DIR / str(experiment_settings["history_csv"])
+    if history_filename is None:
+        history_filename = str(experiment_settings["history_csv"])
+    history_csv = metrics_dir / history_filename
+    results_csv = metrics_dir / "experiment_results.csv"
 
     print(f"Model: {MODEL_NAME}")
     print(f"Experiment type: {EXPERIMENT_TYPE}")
@@ -290,7 +302,7 @@ def run_experiment(
     print(f"Recall:    {metrics['recall']:.4f}")
     print(f"F1-score:  {metrics['f1_score']:.4f}")
 
-    save_experiment_results(test_accuracy, metrics, epochs)
+    save_experiment_results(test_accuracy, metrics, epochs, results_csv)
 
 
 def main() -> None:
