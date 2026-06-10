@@ -1,7 +1,12 @@
 from tensorflow.keras import Model
 from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.applications.efficientnet import preprocess_input
 from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
+
+# EfficientNetB0 rescales and normalises inputs internally; preprocess_input
+# is a no-op that keeps images in [0, 255] as the model expects.
+PREPROCESS_FN = preprocess_input
 
 
 def build_efficientnetb0_model(
@@ -14,8 +19,6 @@ def build_efficientnetb0_model(
         include_top=False,
         input_shape=input_shape,
     )
-
-    # Freeze the pretrained feature extractor for the baseline experiment.
     base_model.trainable = False
 
     x = base_model.output
@@ -24,7 +27,6 @@ def build_efficientnetb0_model(
     output = Dense(num_classes, activation="sigmoid")(x)
 
     model = Model(inputs=base_model.input, outputs=output)
-
     model.compile(
         optimizer=Adam(),
         loss="binary_crossentropy",

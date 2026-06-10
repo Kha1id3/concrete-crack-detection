@@ -1,9 +1,13 @@
 from tensorflow.keras import Model
 from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.layers import Input, RandomFlip, RandomRotation, RandomZoom
 from tensorflow.keras.optimizers import Adam
+
+# Maps [0, 255] inputs to [-1, 1].
+PREPROCESS_FN = preprocess_input
 
 
 def build_mobilenetv2_model(
@@ -16,8 +20,6 @@ def build_mobilenetv2_model(
         include_top=False,
         input_shape=input_shape,
     )
-
-    # Freeze the pretrained feature extractor for the first baseline.
     base_model.trainable = False
 
     x = base_model.output
@@ -26,7 +28,6 @@ def build_mobilenetv2_model(
     output = Dense(num_classes, activation="sigmoid")(x)
 
     model = Model(inputs=base_model.input, outputs=output)
-
     model.compile(
         optimizer=Adam(),
         loss="binary_crossentropy",
@@ -49,7 +50,7 @@ def build_tuned_mobilenetv2_model(
         input_shape=input_shape,
     )
 
-    # Start by freezing everything, then unfreeze only the last few layers.
+    # Freeze all layers, then re-enable the last few (BatchNorm stays frozen).
     base_model.trainable = True
     for layer in base_model.layers[:-fine_tune_layers]:
         layer.trainable = False
@@ -60,7 +61,6 @@ def build_tuned_mobilenetv2_model(
     inputs = Input(shape=input_shape)
     x = inputs
 
-    # Keras augmentation layers are active during training only.
     if use_augmentation:
         x = RandomFlip("horizontal")(x)
         x = RandomRotation(0.05)(x)
@@ -72,7 +72,6 @@ def build_tuned_mobilenetv2_model(
     output = Dense(num_classes, activation="sigmoid")(x)
 
     model = Model(inputs=inputs, outputs=output)
-
     model.compile(
         optimizer=Adam(learning_rate=1e-5),
         loss="binary_crossentropy",
