@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import pandas as pd
 from sklearn.utils.class_weight import compute_class_weight
+import tensorflow as tf
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -28,6 +29,7 @@ BATCH_SIZE = 32
 DATASET_NAME = "sdnet2018"
 MODEL_NAME = "EfficientNetB0"
 EXPERIMENT_TYPE = "baseline_transfer_learning"
+RANDOM_SEED = 42
 
 EXPERIMENT_SETTINGS = {
     ("MobileNetV2", "baseline_transfer_learning"): {
@@ -67,6 +69,12 @@ def print_array_sizes(x_train, y_train, x_val, y_val, x_test, y_test) -> None:
     print(f"Train:      X={x_train.shape}, y={y_train.shape}")
     print(f"Validation: X={x_val.shape}, y={y_val.shape}")
     print(f"Test:       X={x_test.shape}, y={y_test.shape}")
+
+
+def set_random_seeds() -> None:
+    """Set random seeds to make repeated runs easier to compare."""
+    np.random.seed(RANDOM_SEED)
+    tf.random.set_seed(RANDOM_SEED)
 
 
 def get_experiment_settings() -> dict[str, int | str]:
@@ -169,6 +177,7 @@ def save_experiment_results(
         "train_limit": TRAIN_LIMIT,
         "val_limit": VAL_LIMIT,
         "test_limit": TEST_LIMIT,
+        "random_seed": RANDOM_SEED,
         "epochs": epochs,
         "batch_size": BATCH_SIZE,
         "keras_test_accuracy": keras_test_accuracy,
@@ -185,8 +194,29 @@ def save_experiment_results(
     print(f"Experiment results saved to: {RESULTS_CSV}")
 
 
-def main() -> None:
-    """Run the selected model experiment on the selected dataset."""
+def run_experiment(
+    dataset_name: str = DATASET_NAME,
+    model_name: str = MODEL_NAME,
+    experiment_type: str = EXPERIMENT_TYPE,
+    train_limit: int | None = TRAIN_LIMIT,
+    val_limit: int | None = VAL_LIMIT,
+    test_limit: int | None = TEST_LIMIT,
+    random_seed: int = RANDOM_SEED,
+) -> None:
+    """Run one experiment with the selected settings."""
+    global DATASET_NAME, MODEL_NAME, EXPERIMENT_TYPE
+    global TRAIN_LIMIT, VAL_LIMIT, TEST_LIMIT, RANDOM_SEED
+
+    DATASET_NAME = dataset_name
+    MODEL_NAME = model_name
+    EXPERIMENT_TYPE = experiment_type
+    TRAIN_LIMIT = train_limit
+    VAL_LIMIT = val_limit
+    TEST_LIMIT = test_limit
+    RANDOM_SEED = random_seed
+
+    set_random_seeds()
+
     experiment_settings = get_experiment_settings()
     epochs = int(experiment_settings["epochs"])
     history_csv = METRICS_DIR / str(experiment_settings["history_csv"])
@@ -194,6 +224,7 @@ def main() -> None:
     print(f"Model: {MODEL_NAME}")
     print(f"Experiment type: {EXPERIMENT_TYPE}")
     print(f"Dataset: {DATASET_NAME}")
+    print(f"Random seed: {RANDOM_SEED}")
     print("Loading dataset...")
     dataset_df = load_selected_dataset()
 
@@ -203,7 +234,7 @@ def main() -> None:
 
     print(f"Total images found: {len(dataset_df)}")
     print("Splitting dataset into train, validation, and test sets...")
-    train_df, val_df, test_df = split_dataset(dataset_df)
+    train_df, val_df, test_df = split_dataset(dataset_df, random_state=RANDOM_SEED)
 
     print("Loading and preprocessing images...")
     x_train, y_train = load_and_preprocess_images(
@@ -260,6 +291,11 @@ def main() -> None:
     print(f"F1-score:  {metrics['f1_score']:.4f}")
 
     save_experiment_results(test_accuracy, metrics, epochs)
+
+
+def main() -> None:
+    """Run the experiment configured at the top of this file."""
+    run_experiment()
 
 
 if __name__ == "__main__":

@@ -5,3 +5,7 @@ concrete_crack_images,MobileNetV2,tuned_transfer_learning,2000,500,500,0.992,0.9
 concrete_crack_images,ResNet50,baseline_transfer_learning,5000,1000,1000,0.931,0.986013986013986,0.8703703703703703,0.9245901639344264
 concrete_crack_images,EfficientNetB0,baseline_transfer_learning,5000,1000,1000,0.486,0.486,1.0,0.6541049798115747
 concrete_crack_images,MobileNetV2,tuned_transfer_learning,2000,500,500,0.73,1.0,0.466403162055336,0.6361185983827493
+sdnet2018,MobileNetV2,tuned_transfer_learning_conservative_aug,5000,1000,1000,0.869,0.5371428571428571,0.6527777777777778,0.5893416927899686
+sdnet2018,MobileNetV2,baseline_transfer_learning,5000,1000,1000,0.9,0.8666666666666667,0.3611111111111111,0.5098039215686274
+sdnet2018,ResNet50,baseline_transfer_learning,5000,1000,1000,0.144,0.144,1.0,0.2517482517482518
+sdnet2018,EfficientNetB0,baseline_transfer_learning,5000,1000,1000,0.856,0.0,0.0,0.0
