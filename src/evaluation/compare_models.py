@@ -4,9 +4,9 @@ import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RESULTS_CSV = PROJECT_ROOT / "results" / "metrics" / "experiment_results.csv"
-COMPARISON_CSV = PROJECT_ROOT / "results" / "metrics" / "model_comparison.csv"
-BEST_PER_DATASET_CSV = PROJECT_ROOT / "results" / "metrics" / "best_per_dataset.csv"
+RESULTS_CSV = PROJECT_ROOT / "results_fixed_preprocessing" / "metrics" / "experiment_results.csv"
+COMPARISON_CSV = PROJECT_ROOT / "results_fixed_preprocessing" / "metrics" / "model_comparison.csv"
+BEST_PER_DATASET_CSV = PROJECT_ROOT / "results_fixed_preprocessing" / "metrics" / "best_per_dataset.csv"
 
 COMPARISON_COLUMNS = [
     "dataset",

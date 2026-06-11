@@ -1,0 +1,3 @@
+dataset,model,experiment_type,train_limit,val_limit,test_limit,accuracy,precision,recall,f1_score
+concrete_crack_images,MobileNetV2,tuned_transfer_learning_conservative_aug,5000,1000,1000,0.998,0.996078431372549,1.0,0.9980353634577604
+sdnet2018,MobileNetV2,tuned_transfer_learning_conservative_aug,5000,1000,1000,0.896,0.6829268292682927,0.5637583892617449,0.6176470588235294

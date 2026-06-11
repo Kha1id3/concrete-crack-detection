@@ -6,7 +6,7 @@ from scipy.stats import ttest_rel, wilcoxon
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-RESULTS_CSV = PROJECT_ROOT / "results" / "metrics" / "experiment_results.csv"
+RESULTS_CSV = PROJECT_ROOT / "results_fixed_preprocessing" / "metrics" / "experiment_results.csv"
 
 DATASETS = ["concrete_crack_images", "sdnet2018"]
 MODEL_NAME = "MobileNetV2"

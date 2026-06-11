@@ -40,3 +40,5 @@ data/processed/concrete_crack_images/*
 data/processed/sdnet2018/*
 !data/processed/concrete_crack_images/.gitkeep
 !data/processed/sdnet2018/.gitkeep
+results_fixed_preprocessing/logs/*
+results_fixed_preprocessing/history/*
